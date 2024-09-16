@@ -10,18 +10,18 @@ import javax.swing.JOptionPane;
 public class MultiThreadPrinter {
 	
 	// Variabel for å lagre standardmelding, før bruker-input
-	private static String message = "Hallo verden!";
+	private static String melding = "Hallo verden!";
 			
 	// Flagg for å kontrollere om programmet skal fortsette å kjøre
-	private static boolean running = true;
+	private static boolean kjorer = true;
 
 
 	public static void main(String[] args) {
 		
 		// Tråd for å skrive ut meldinger hvert 3. sekund
-		Thread printThread = new Thread(() -> {
-			while (running) {
-				System.out.println(message);
+		Thread printerThread = new Thread(() -> {
+			while (kjorer) {
+				System.out.println(melding);
 				
 				try {
 					Thread.sleep(3000); // Venter i 3 sekund
@@ -35,25 +35,25 @@ public class MultiThreadPrinter {
 		
 		// Tråd for å ta imot brukerens input via JOptionPane
 		Thread inputThread = new Thread(() -> {
-			while (running) {
-				String newMessage = JOptionPane.showInputDialog("Tast inn meldingen du vil skrive ut. Tast 'quit' for å avslutte");
+			while (kjorer) {
+				String nyMelding = JOptionPane.showInputDialog("Tast inn meldingen du vil skrive ut. Tast 'quit' for å avslutte");
 				
-				if(newMessage != null && newMessage.equalsIgnoreCase("quit")) {
-					running = false;
-				} else if (newMessage != null) {
-					message = newMessage;
+				if(nyMelding != null && nyMelding.equalsIgnoreCase("quit")) {
+					kjorer = false;
+				} else if (nyMelding != null) {
+					melding = nyMelding;
 				}
 			}
 		});
 		
 		
 		// Starter begge trådene
-		printThread.start();
+		printerThread.start();
 		inputThread.start();
 		
 		// Venter til begge trådene er ferdige
 		try {
-			printThread.join();
+			printerThread.join();
 			inputThread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
